@@ -5,6 +5,7 @@
 
 import requests
 import os
+import time
 
 # usa API gratuita do Hugging Face para geração de texto
 HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
@@ -14,7 +15,7 @@ HF_TOKEN = os.getenv('HF_API_TOKEN', '')
 FALLBACK_RULES = {
     'Transporte': ['uber', 'taxi', 'ônibus', 'metrô', 'combustível', 'gasolina', 'passagem', 'trem', 'voo', 'avião'],
     'Alimentação': ['pizza', 'restaurante', 'comida', 'café', 'almoço', 'jantar', 'lanche', 'padaria', 'açaí', 'hamburger', 'sorvete', 'adega'],
-    'Compras': ['compra', 'market', 'supermercado', 'loja', 'shopping', 'produto'],
+    'Compras': ['compra', 'market', 'supermercado', 'loja', 'shopping', 'produto', 'mercado'],
     'Lazer': ['cinema', 'jogo', 'filme', 'diversão', 'show', 'museu', 'teatro', 'shopping', 'viagem', 'hotel'],
     'Saúde': ['farmácia', 'médico', 'hospital', 'dentista', 'remédio', 'medicamento', 'academia'],
     'Contas': ['conta', 'água', 'luz', 'internet', 'gás', 'telefone', 'energia'],
@@ -26,16 +27,28 @@ def query_hf(prompt: str) -> str:
     headers = {}
     if HF_TOKEN:
         headers['Authorization'] = f'Bearer {HF_TOKEN}'
-    try:
-        resp = requests.post(HF_API_URL, headers=headers, json={"inputs": prompt}, timeout=10)
-        if resp.ok:
-            data = resp.json()
-            if isinstance(data, dict) and 'error' in data:
-                return ''
-            text = data[0].get('generated_text') if isinstance(data, list) else ''
-            return text or ''
-    except Exception:
-        pass
+    tries = 3
+    for attempt in range(tries):
+        try:
+            resp = requests.post(HF_API_URL, headers=headers, json={"inputs": prompt}, timeout=15)
+            print("HF resposta:", resp.status_code, resp.text)  # log para debug
+            if resp.ok:
+                data = resp.json()
+                # Caso de erro (modelo carregando ou indisponível)
+                if isinstance(data, dict) and 'error' in data:
+                    time.sleep(2)  # espera e tenta de novo
+                    continue
+                # Caso padrão: lista com generated_text
+                if isinstance(data, list) and 'generated_text' in data[0]:
+                    return data[0]['generated_text']
+                # Alguns modelos retornam string direta
+                if isinstance(data, str):
+                    return data
+            else:
+                print("Erro HF:", resp.status_code)
+        except Exception as e:
+            print("Exceção HF:", e)
+        time.sleep(1)
     return ''
 
 def fallback_categorize(description: str) -> str:
