@@ -16,10 +16,7 @@ Este projeto inclui **documentação técnica profissional** para fins educacion
 
 | Documento | Conteúdo |
 |-----------|----------|
-| **[GUIA_PROJETO.md](GUIA_PROJETO.md)** | Guia de usuário e instalação |
 | **[TCC_DOCUMENTACAO.md](TCC_DOCUMENTACAO.md)** | Documentação técnica completa (★ LEIA ISSO) |
-| **[DOCUMENTACAO_EXTENSAO.md](DOCUMENTACAO_EXTENSAO.md)** | Como estender o projeto |
-| **[TESTES_TROUBLESHOOTING.md](TESTES_TROUBLESHOOTING.md)** | Testes e resolução de problemas |
 | **[README.md](README.md)** | Este arquivo |
 
 ---
