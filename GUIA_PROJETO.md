@@ -11,6 +11,7 @@
 5. [Estrutura do Projeto](#estrutura-do-projeto)
 6. [Modificar / Adicionar Recursos](#modificar--adicionar-recursos)
 7. [Deploy](#deploy)
+8. [commits]
 
 ---
 
@@ -757,3 +758,41 @@ python main.py
 **Status:** 🟢 Pronto para Produção
 
 **Se tiver dúvidas, releia este documento. Tudo está aqui!**
+
+
+# commit (🔄 Como recuperar versões antigas) 
+
+1. Veja o histórico:
+
+```powershell
+git log
+```
+
+2. Copie o hash (aquele código longo do commit).
+
+3. Volte para essa versão:
+
+```powershell
+git checkout <hash>
+```
+
+4. Isso coloca os arquivos no estado daquele commit.
+
+**Se quiser apenas ver as diferenças sem voltar:**
+
+```powershell
+git diff
+```
+
+# commit (☁️ E se eu perder o código no PC?) backup seguro
+
+- Se você só usa Git local, os commits ficam guardados na pasta .git do projeto.
+
+- Se o computador quebrar ou a pasta for apagada, você perde tudo.
+
+- Por isso, é fortemente recomendado ter um repositório remoto (GitHub, GitLab, Bitbucket).
+Assim, mesmo que o PC seja perdido, você pode clonar o projeto de volta:
+
+```powershell
+git clone https://github.com/seuusuario/seuprojeto.git
+```
