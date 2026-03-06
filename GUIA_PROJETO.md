@@ -6,7 +6,7 @@
 1. [O Que É](#o-que-é)
 2. [Instalação](#instalação--setup)
 3. [Configuração](#configuração)
-   - [Token Hugging Face](#token-hugging-face)
+-  [Token Hugging Face](#token-hugging-face)
 4. [Como Usar](#como-usar)
 5. [Estrutura do Projeto](#estrutura-do-projeto)
 6. [Modificar / Adicionar Recursos](#modificar--adicionar-recursos)
