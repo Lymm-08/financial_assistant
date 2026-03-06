@@ -1,0 +1,25 @@
+# ==========================
+# DEPENDÊNCIAS DO PROJETO
+# ==========================
+
+# Bot Telegram
+python-telegram-bot==20.3
+
+# Banco de Dados
+sqlalchemy==2.0.23
+sqlalchemy-utils==0.41.1
+psycopg2-binary==2.9.9
+
+# Criptografia
+cryptography==41.0.7
+
+# Variáveis de Ambiente
+python-dotenv==1.0.0
+
+# Utilitários
+requests==2.31.0
+
+# Development (opcional)
+pytest==7.4.3
+black==23.12.1
+pylint==3.0.3
