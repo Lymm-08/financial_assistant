@@ -2,7 +2,10 @@
 
 > **Bot inteligente para gerenciamento financeiro pessoal via Telegram** — desenvolvido em Python.
 
-`https://img.shields.io/badge/Status-Pronto%20para%20Produ%C3%A7%C3%A3o-green` `https://img.shields.io/badge/Python-3.10%2B-blue` `https://img.shields.io/badge/License-Educational-informational`
+![Status](https://img.shields.io/badge/Status-Pronto%20para%20Produ%C3%A7%C3%A3o-green)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![License](https://img.shields.io/badge/License-Educational-informational)
+
 
 ---
 
@@ -58,15 +61,6 @@ python main.py
 
 ---
 
-### 📚 Documentação completa
-
-A documentação técnica detalhada (arquitetura, modelos de dados, fluxos, testes) está em:  
-**`[Parece que o resultado não era seguro para exibição. Vamos mudar as coisas e tentar outra opção!]`**
-
-Para um guia de instalação passo a passo, veja: **`[Parece que o resultado não era seguro para exibição. Vamos mudar as coisas e tentar outra opção!]`**
-
----
-
 ### 🔒 Segurança essencial
 
 - **NÃO** commite o arquivo `.env`.  
@@ -90,15 +84,3 @@ __pycache__/
 ### 📜 Licença
 
 **Educational Use Only - TCC 2026**
-
----
-
-### 🎓 Info do TCC
-
-**Título:** Bot Financeiro Inteligente com IA  
-**Data:** 06/03/2026  
-**Status:** Pronto para Apresentação
-
----
-
-**Made with 💚 for Education**
