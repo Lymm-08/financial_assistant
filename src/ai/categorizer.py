@@ -74,3 +74,6 @@ def categorize_with_confidence(description):
         return ('Outros', 0.0)
     cat = categorize(description)
     return (cat, 0.5)
+
+
+print("HF_TOKEN:", HF_TOKEN[:10], "...")
