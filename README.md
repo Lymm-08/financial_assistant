@@ -1,23 +1,8 @@
 # 🤖 Bot Financeiro Telegram - TCC
 
-> Um bot inteligente para gerenciamento financeiro pessoal desenvolvido em Python
+> **Bot inteligente para gerenciamento financeiro pessoal via Telegram** — desenvolvido em Python.
 
-![Status](https://img.shields.io/badge/Status-Pronto%20para%20Produção-green)
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![License](https://img.shields.io/badge/License-Educational-informational)
-
----
-
-## 📚 Documentação Completa do TCC
-
-Este projeto inclui **documentação técnica profissional** para fins educacionais:
-
-### 📖 Arquivos de Documentação
-
-| Documento | Conteúdo |
-|-----------|----------|
-| **[TCC_DOCUMENTACAO.md](TCC_DOCUMENTACAO.md)** | Documentação técnica completa (★ LEIA ISSO) |
-| **[README.md](README.md)** | Este arquivo |
+`https://img.shields.io/badge/Status-Pronto%20para%20Produ%C3%A7%C3%A3o-green` `https://img.shields.io/badge/Python-3.10%2B-blue` `https://img.shields.io/badge/License-Educational-informational`
 
 ---
 
@@ -33,22 +18,22 @@ Um **bot chatbot financeiro** que permite:
 
 ---
 
-## 🚀 Quick Start
 
-### 1. Clonar/Baixar o Projeto
+### 🚀 Quick Start
 
+1. **Clonar**
 ```bash
+git clone <seu-repo>
 cd bot-financeiro
 ```
 
-### 2. Instalar Dependências
-
+2. **Instalar dependências**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configurar `.env`
-
+3. **Criar arquivo `.env`**  
+Use `.env.example` como template e preencha as variáveis essenciais:
 ```env
 BOT_TOKEN=seu_token_aqui
 DB_URI=postgresql://postgres:senha@localhost:5432/bot_financeiro
@@ -57,232 +42,63 @@ HF_API_TOKEN=hf_seu_token
 DEBUG=False
 ```
 
-### 4. Iniciar o Bot
-
+4. **Rodar**
 ```bash
 python main.py
 ```
 
-### 5. Usar no Telegram
+---
 
+### ✨ Uso rápido
+
+- **/iniciar** — menu inicial  
+- **/relatorio simples** — ver resumo  
+- **20 pizza** — registrar despesa  
+- **recebi 1000 salario** — registrar receita
+
+---
+
+### 📚 Documentação completa
+
+A documentação técnica detalhada (arquitetura, modelos de dados, fluxos, testes) está em:  
+**`[Parece que o resultado não era seguro para exibição. Vamos mudar as coisas e tentar outra opção!]`**
+
+Para um guia de instalação passo a passo, veja: **`[Parece que o resultado não era seguro para exibição. Vamos mudar as coisas e tentar outra opção!]`**
+
+---
+
+### 🔒 Segurança essencial
+
+- **NÃO** commite o arquivo `.env`.  
+- Verifique que `.gitignore` inclui:
 ```
-/iniciar              - Menu inicial
-/relatorio simples    - Ver resumo
-20 pizza             - Registrar gasto
-recebi 1000 salario  - Registrar receita
+.env
+.venv/
+__pycache__/
+*.pyc
 ```
+- **Criptografia** está implementada; ative em produção conforme instruções no TCC.
 
 ---
 
-## 🏗️ Arquitetura
+### 📦 Tecnologias principais
 
-```
-┌─────────────────┐
-│   Telegram      │
-└────────┬────────┘
-         │ (mensagens)
-         ▼
-┌─────────────────────────────┐
-│  Commands Layer             │
-│  (handlers.py)              │
-└────────┬────────────────────┘
-         │
-    ┌────┴────┬─────────┬──────────┐
-    ▼         ▼         ▼          ▼
-┌────────┐ ┌──────┐ ┌────────┐ ┌────────┐
-│Parser  │ │ Cate │ │Services│ │ Models │
-│        │ │gorizer         │         │
-└────────┘ └──────┘ └────────┘ └───┬────┘
-                                    │
-                                    ▼
-                        ┌───────────────────┐
-                        │  PostgreSQL DB    │
-                        └───────────────────┘
-```
+**Python 3.10+**, **python-telegram-bot 20.3**, **PostgreSQL + SQLAlchemy**, **Hugging Face API**, **cryptography**.
 
 ---
 
-## 📊 Stack Tecnológico
+### 📜 Licença
 
-| Camada | Tecnologia |
-|--------|------------|
-| **Bot** | python-telegram-bot 20.3 |
-| **Backend** | Python 3.10+ |
-| **Database** | PostgreSQL + SQLAlchemy |
-| **IA** | Hugging Face API |
-| **Segurança** | Cryptography, python-dotenv |
+**Educational Use Only - TCC 2026**
 
 ---
 
-## 🎯 Recursos
-
-### Comandos Implementados
-
-| Comando | Função |
-|---------|--------|
-| `/iniciar` | Menu de boas-vindas |
-| `/relatorio` | Gerar 4 tipos de relatórios |
-| `/receita` | Confirmar entrada |
-| `/despesa` | Confirmar gasto |
-| Texto livre | Registrar transação |
-
-### Tipos de Relatórios
-
-- 📊 **Simples:** Receitas, despesas, saldo, economia%
-- 📈 **Detalhado:** Com breakdown por categoria
-- 📅 **Semanal:** Últimos 7 dias
-- 📆 **Mensal:** Últimos 30 dias
-
-### Categorias de Transações
-
-```
-Alimentação    Transporte      Saúde
-Educação       Lazer           Vestiário
-Compras        Contas/Utilities Renda
-Presentes      Outros
-```
-
----
-
-## 🔒 Segurança
-
-✅ Variáveis de ambiente (.env)  
-✅ SQLAlchemy ORM (previne SQL injection)  
-✅ Criptografia de dados (Fernet)  
-✅ Isolamento por usuário  
-✅ Validação de entrada  
-
----
-
-## 📁 Estrutura
-
-```
-bot-financeiro/
-├── main.py                      # Entry point
-├── requirements.txt             # Dependências
-├── .env                        # Config (não commitar)
-├── GUIA_PROJETO.md             # Guia de usuário
-├── TCC_DOCUMENTACAO.md         # ⭐ DOCUMENTAÇÃO TÉCNICA
-├── DOCUMENTACAO_EXTENSAO.md    # Como estender
-├── TESTES_TROUBLESHOOTING.md   # Testes
-│
-└── src/
-    ├── config/                 # ⚙️ Configurações
-    ├── models/                 # 🗄️ Banco de dados
-    ├── commands/               # 🤖 Handlers
-    ├── ai/                     # 🧠 IA
-    ├── services/               # 📊 Relatórios
-    └── utils/                  # 🛠️ Utilitários
-```
-
----
-
-## 🧪 Testes
-
-```bash
-# Teste de conexão DB
-python teste_db.py
-
-# Rodar bot em modo debug
-DEBUG=True python main.py
-
-# Ver o arquivo de testes completo
-cat TESTES_TROUBLESHOOTING.md
-```
-
----
-
-## 📈 Performance
-
-| Operação | Tempo |
-|----------|-------|
-| Registrar transação | < 1s |
-| Gerar relatório | < 5s |
-| Buscar 100 registros | < 2s |
-| Categorizar com IA | 1-3s |
-
----
-
-## 🚀 Deploy em Produção
-
-### Opção 1: Windows Task Scheduler (Recomendado)
-
-Ver [GUIA_PROJETO.md](GUIA_PROJETO.md) → Seção "Rodar 24/7"
-
-### Opção 2: VPS (DigitalOcean, AWS)
-
-```bash
-# No servidor:
-git clone seu-repo
-cd bot-financeiro
-pip install -r requirements.txt
-nohup python main.py &
-```
-
-### Opção 3: Docker
-
-```bash
-docker build -t bot-financeiro .
-docker run -d --env-file .env bot-financeiro
-```
-
----
-
-## 🤝 Contribuindo
-
-Este é um projeto educacional de TCC.  
-Sinta-se à vontade para estender e melhorar!
-
-**Como estender:**
-1. Leia [DOCUMENTACAO_EXTENSAO.md](DOCUMENTACAO_EXTENSAO.md)
-2. Adicione novo recurso
-3. Teste conforme [TESTES_TROUBLESHOOTING.md](TESTES_TROUBLESHOOTING.md)
-
----
-
-## ❓ Dúvidas Frequentes
-
-**P: Preciso de PostgreSQL?**  
-A: Sim, mas pode trocar por SQLite editando `config.py`
-
-**P: Como gerar chave de encriptação?**  
-A: Veja [TESTES_TROUBLESHOOTING.md](TESTES_TROUBLESHOOTING.md)
-
-**P: O bot funciona em Android/iPhone?**  
-A: Sim! Via Telegram em qualquer aparelho
-
-**P: Posso usar com meu banco real?**  
-A: Sim! Todos os dados são criptografados
-
-**Para mais dúvidas:**  
-👉 Consulte a [TCC_DOCUMENTACAO.md](TCC_DOCUMENTACAO.md)
-
----
-
-## 📜 Licença
-
-Educational Use Only - TCC 2026
-
----
-
-## 🎓 Info do TCC
+### 🎓 Info do TCC
 
 **Título:** Bot Financeiro Inteligente com IA  
 **Data:** 06/03/2026  
-**Status:** 🟢 Pronto para Apresentação  
-**Linhas de Código:** ~2000 LOC  
-**Domínios:** Backend, IA, Segurança, DevOps  
+**Status:** Pronto para Apresentação
 
 ---
 
-## 📚 Leitura Recomendada
-
-1. Start → [GUIA_PROJETO.md](GUIA_PROJETO.md)
-2. Técnico → [TCC_DOCUMENTACAO.md](TCC_DOCUMENTACAO.md) (★ ESSENCIAL)
-3. Extensão → [DOCUMENTACAO_EXTENSAO.md](DOCUMENTACAO_EXTENSAO.md)
-4. Testes → [TESTES_TROUBLESHOOTING.md](TESTES_TROUBLESHOOTING.md)
-
----
-
-**Made with 💚 for Education**  
-**Pronto para seu TCC** ✅
+**Made with 💚 for Education**
