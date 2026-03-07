@@ -52,7 +52,9 @@ async def cmd_relatorio(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
     await update.message.reply_text(relatorio)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
+
     """Processa mensagens para registrar gastos/receitas"""
+
     text = update.message.text
     user_id = str(update.effective_user.id)
     
@@ -75,7 +77,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db)
     
     # Detectar tipo com melhor confiança
     desc_lower = descricao.lower()
-    palavras_receita = ['recebi', 'salario', 'bônus', 'ganho', 'renda', 'pagamento', 'depósito']
+    palavras_receita = ['recebi', 'salario', 'bônus', 'ganho', 'renda', 'pagamento', 'depósito', 'bonificação']
     palavras_despesa = ['pago', 'comprei', 'gastei', 'transferência']
     
     eh_receita = any(p in desc_lower for p in palavras_receita)
