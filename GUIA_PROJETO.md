@@ -315,13 +315,15 @@ Uma janela abre com propriedades. Vá em:
 Abra Telegram, procure seu bot e envie:
 
 ```
-/start ou /iniciar         - Menu principal com botões
-/relatorio simples          - Resumo do mês atual
-/relatorio completo         - Detalhes do mês atual com categorias
-/relatorio semanal          - Últimos 7 dias
-/relatorio mensal           - Últimos 30 dias
-/reset                      - Zerar todas as transações e saldo
-/ajustar_saldo 1000         - Ajustar saldo manualmente
+/start ou /iniciar              - Menu principal com botões
+/relatorio simples              - Resumo do mês atual
+/relatorio completo             - Detalhes do mês atual com categorias
+/relatorio semanal              - Últimos 7 dias
+/relatorio mensal               - Últimos 30 dias
+/relatorio mes 1                - Relatório de janeiro (1=jan, 2=fev, ..., 12=dez)
+/relatorio mes 3                - Relatório de março
+/reset                          - Zerar todas as transações e saldo
+/ajustar_saldo 1000            - Ajustar saldo manualmente
 ```
 
 **Botões no /start:**
@@ -359,7 +361,21 @@ Abra Telegram, procure seu bot e envie:
 - Saldo atual é mantido para o novo mês
 - Histórico completo permanece salvo para relatórios de períodos anteriores
 
+**Relatórios de Mês Específico:**
+- Use `/relatorio mes X` onde X é o número do mês (1-12)
+- Exemplos: `/relatorio mes 1` (janeiro), `/relatorio mes 5` (maio), `/relatorio mes 12` (dezembro)
+- Mostra receitas, despesas, economia e detalhes por categoria do mês escolhido
+- Útil para análise retroativa e planejamento futuro
+
 ## 🔧 Correções e Melhorias Recentes
+
+### Code Organization - Estrutura Clara
+- **Todo arquivo possui seções delimitadas** com comentários explicativos
+- **IMPORTAÇÕES** no topo de cada arquivo
+- **SEÇÕES LÓGICAS** separadas por `==== SEÇÃO: NOME ====`
+- **SUBSEÇÕES** com funções/dados relacionados
+- **Docstrings** descritivos em todas as funções
+- Resultado: Código legível e fácil de manter
 
 ### Erros Corrigidos:
 - **Categorização:** Adicionadas mais palavras-chave para "mercado", "feira", etc. em Alimentação/Compras
@@ -370,13 +386,14 @@ Abra Telegram, procure seu bot e envie:
 ### Novos Comandos:
 - `/reset`: Zera todas transações e saldo
 - `/ajustar_saldo <valor>`: Ajusta saldo manualmente
-- Botões interativos no /start
+- `/relatorio mes X`: Relatório de mês específico do ano (1-12)
+- Botões interativos no /start com callbacks
 
 ### Funcionalidades Automáticas:
 - **Reset Mensal:** Ao mudar o mês, transações são zeradas, saldo mantido
+- **Relatórios por Período:** Análise de qualquer mês do ano
 - **Callbacks:** Botões funcionais para reset e inserir saldo
-  Data: 05/03/2026 19:30
-  ```
+- **Documentação em Código:** Cada módulo bem comentado
 
 **Ver Relatório:**
 - Digite: `/relatorio simples`
@@ -592,18 +609,70 @@ texto_normal = enc.decrypt(texto_criptografado)
 
 ### `services/` - SERVIÇOS
 
-#### `reports.py` - Relatórios
+#### `reports.py` - Relatórios Financeiros
 ```python
-from src.services.reports import generate_report
+from src.services.reports import generate_report, generate_month_specific_report
 
-# Tipos disponíveis:
-generate_report(user_id, 'simples')    # Resumo
-generate_report(user_id, 'completo')   # Completo
-generate_report(user_id, 'semanal')    # 7 dias
-generate_report(user_id, 'mensal')     # 30 dias
+# Tipos de relatórios:
+generate_report(user_id, 'simples')    # Resumo do mês atual
+generate_report(user_id, 'completo')   # Completo com categorias
+generate_report(user_id, 'semanal')    # Últimos 7 dias
+generate_report(user_id, 'mensal')     # Últimos 30 dias
+
+# Relatório de mês específico:
+generate_month_specific_report(user_id, 3, db)  # Março (mês 3)
+generate_month_specific_report(user_id, 12, db) # Dezembro (mês 12)
 ```
 
 ---
+
+# 📚 ORGANIZAÇÃO DO CÓDIGO
+
+## Estrutura de Seções em Cada Arquivo
+
+Todos os arquivos `.py` seguem uma **estrutura clara e consistente**:
+
+```python
+# ==========================
+# ARQUIVO: src/pasta/arquivo.py
+# DESCRIÇÃO DO MÓDULO
+# ==========================
+
+# ==========================
+# IMPORTAÇÕES
+# ==========================
+# Todas as importações no topo
+
+# ==========================
+# SEÇÃO: NOME DA FUNCIONALIDADE
+# ==========================
+
+# SUBSEÇÃO: Descrição específica
+# Código relacionado à subseção
+
+def funcao():
+    """Docstring explicando o que a função faz"""
+    pass
+
+# ==========================
+# SEÇÃO: OUTRA FUNCIONALIDADE
+# ==========================
+```
+
+**Benefícios:**
+- ✅ Fácil navegação no código
+- ✅ Claro propósito de cada seção
+- ✅ Docstrings descritivos
+- ✅ Manutenção simplificada
+
+**Arquivos organizados assim:**
+- `main.py` — Seções: IMPORTAÇÕES, VALIDAÇÃO, INICIALIZAÇÃO, FUNÇÃO PRINCIPAL
+- `src/config/config.py` — Seções: IMPORTAÇÕES, CARREGAMENTO .ENV, CONFIGURAÇÃO
+- `src/models/db.py` — Seções: IMPORTAÇÕES, BASE, MODELO ENTRY, MODELO BANK, INICIALIZAÇÃO
+- `src/commands/handlers.py` — 7+ seções com cada grupo de commands
+- `src/ai/categorizer.py` — Seções: IMPORTAÇÕES, REGRAS, QUERY IA, FALLBACK, FUNÇÃO PRINCIPAL
+- `src/utils/*.py` — Cada arquivo com suas seções lógicas
+- `src/services/reports.py` — Seções para cada tipo de relatório
 
 # 🛠️ MODIFICAR / ADICIONAR RECURSOS
 

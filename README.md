@@ -54,10 +54,31 @@ python main.py
 
 ### ✨ Uso rápido
 
-- **/iniciar** — menu inicial  
-- **/relatorio simples** — ver resumo  
-- **20 pizza** — registrar despesa  
-- **recebi 1000 salario** — registrar receita
+**Comandos principais:**
+- **/start** — Menu inicial com botões  
+- **/relatorio simples** — Resumo do mês atual
+- **/relatorio completo** — Detalhes com categorias
+- **/relatorio semanal** — Últimos 7 dias
+- **/relatorio mensal** — Últimos 30 dias
+- **/relatorio mes 1** — Relatório de janeiro (1-12 para qualquer mês)
+- **/reset** — Zerar todas as transações e saldo
+- **/ajustar_saldo 1500** — Ajustar saldo manualmente
+
+**Transações naturais:**
+- **20 pizza** — Registrar despesa de R$ 20 em Alimentação
+- **recebi 1000 salario** — Registrar receita de R$ 1.000
+
+---
+
+### 🏗️ Código bem organizado
+
+Todo o código está estruturado com **seções claras**, comentários e documentação:
+- **config/** — Configurações e variáveis de ambiente
+- **models/** — Modelos de banco de dados
+- **commands/** — Handlers dos comandos Telegram
+- **ai/** — Categorização automática com IA + fallback
+- **utils/** — Formatação, parsing, criptografia
+- **services/** — Geração de relatórios
 
 ---
 
