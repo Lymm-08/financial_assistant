@@ -36,6 +36,7 @@ class Bank(Base):
     total_balance = Column(Float, default=0)
     currency = Column(String(10), default='BRL')
     last_updated = Column(DateTime, default=datetime.now)
+    last_month = Column(Integer, default=0)
     
     def __repr__(self):
         return f'<Bank {self.user_id}: R${self.total_balance}>'

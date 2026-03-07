@@ -21,7 +21,6 @@ def parse_money(text):
         pass
     return None
 
-
 def parse_date(text):
     """
     Extrai data do texto
