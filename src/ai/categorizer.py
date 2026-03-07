@@ -49,24 +49,25 @@ def query_hf(prompt: str) -> str:
     for attempt in range(tries):
         try:
             resp = requests.post(HF_API_URL, headers=headers, json={"inputs": prompt}, timeout=15)
-            print("HF resposta:", resp.status_code, resp.text)  # log para debug
 
             if resp.ok:
                 data = resp.json()
                 # SUBSEÇÃO: Tratamento de diferentes formatos de resposta
                 if isinstance(data, dict) and 'error' in data:
-                    time.sleep(2)  # espera e tenta de novo
+                    print(f"⚠️  Tentativa {attempt + 1}: Modelo carregando...")
+                    time.sleep(2)
                     continue
                 if isinstance(data, list) and 'generated_text' in data[0]:
                     return data[0]['generated_text']
                 if isinstance(data, str):
                     return data
             else:
-                print("Erro HF:", resp.status_code)
+                print(f"⚠️  Tentativa {attempt + 1}: Erro HF ({resp.status_code})")
         except Exception as e:
-            print("Exceção HF:", e)
+            print(f"⚠️  Tentativa {attempt + 1}: Erro na requisição - {str(e)}")
         time.sleep(1)
 
+    print("⚠️  Fallback: IA não disponível, usando categorização por palavras-chave")
     return ''
 
 # ==========================
