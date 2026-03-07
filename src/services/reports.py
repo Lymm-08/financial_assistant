@@ -1,26 +1,92 @@
 # ==========================
 # ARQUIVO: src/services/reports.py
-# GERACAO DE RELATORIOS
+# SISTEMA DE GERAÇÃO DE RELATÓRIOS FINANCEIROS
+# ==========================
+
+# ==========================
+# IMPORTAÇÕES
 # ==========================
 
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from src.utils.formatter import format_money, format_date
 
+# ==========================
+# FUNÇÕES AUXILIARES
+# ==========================
+
+# ==========================
+# CALCULAR TOTAIS E DIVIDIR POR CATEGORIA
+# ==========================
+
+def _calcular_totais_e_categorias(entries):
+    """Calcula receitas, despesas e agrupa por categoria
+
+    Returns:
+        tuple: (receitas, despesas, categorias_dict)
+    """
+    receitas = sum(e.amount for e in entries if e.type == 'receita')
+    despesas = sum(e.amount for e in entries if e.type == 'despesa')
+
+    categorias = {}
+    for e in entries:
+        cat = e.category
+        if cat not in categorias:
+            categorias[cat] = {'receitas': 0, 'despesas': 0, 'count': 0}
+        if e.type == 'receita':
+            categorias[cat]['receitas'] += e.amount
+        else:
+            categorias[cat]['despesas'] += e.amount
+        categorias[cat]['count'] += 1
+
+    return receitas, despesas, categorias
+
+
+def _formatar_categorias_text(categorias):
+    """Formata dicionário de categorias em texto
+
+    Returns:
+        str: Texto formatado com categorias
+    """
+    if not categorias:
+        return "Nenhuma transação registrada.\n"
+
+    categorias_text = ""
+    for cat, data in sorted(categorias.items()):
+        total_cat = data['receitas'] - data['despesas']
+        categorias_text += f"📂 {cat}: {format_money(total_cat)} ({data['count']} transações)\n"
+
+    return categorias_text
+
+
+def _calcular_economia_pct(receitas, despesas):
+    """Calcula percentual de economia
+
+    Returns:
+        float: Percentual da economia
+    """
+    economia = receitas - despesas
+    pct = economia / receitas * 100 if receitas > 0 else 0.0
+    return pct
+
+# ==========================
+# FUNÇÃO PRINCIPAL DE RELATÓRIOS
+# ==========================
+
 def generate_report(user_id, report_type='simples', db=None):
     """
-    Gera relatorio financeiro
-    
-    Tipos disponiveis:
-    - simples: resumo rapido
-    - completo: detalhes completos
-    - semanal: ultimos 7 dias
-    - mensal: ultimos 30 dias
+    Gera relatório financeiro baseado no tipo solicitado
+
+    Tipos disponíveis:
+    - simples: resumo rápido do mês atual
+    - completo: detalhes completos com categorias
+    - semanal: últimos 7 dias
+    - mensal: últimos 30 dias
     """
-    
+
     if not db:
         return "❌ Erro: Banco de dados não configurado"
-    
+
     if report_type == 'simples':
         return generate_simple_report(user_id, db)
     elif report_type == 'completo':
@@ -32,35 +98,36 @@ def generate_report(user_id, report_type='simples', db=None):
     else:
         return generate_simple_report(user_id, db)
 
+# ==========================
+# RELATÓRIOS PADRÃO
+# ==========================
+
+# ==========================
+# RELATÓRIO SIMPLES
+# ==========================
+
 def generate_simple_report(user_id, db):
-    """Relatorio simples com resumo do mês atual"""
+    """Relatório simples com resumo do mês atual"""
     try:
         session = db['Session']()
         current_month = datetime.now().month
         current_year = datetime.now().year
-        
-        # Buscar transacoes do mês atual
+
+        # SUBSEÇÃO: Buscar transações do mês atual
         entries = session.query(db['Entry']).filter_by(user_id=user_id).filter(
             db['Entry'].date >= datetime(current_year, current_month, 1)
         ).all()
-        
-        # Calcular totais do mês
-        receitas = sum(e.amount for e in entries if e.type == 'receita')
-        despesas = sum(e.amount for e in entries if e.type == 'despesa')
-        
-        # Buscar saldo bancario atual
+
+        # SUBSEÇÃO: Calcular totais
+        receitas, despesas, _ = _calcular_totais_e_categorias(entries)
+        pct = _calcular_economia_pct(receitas, despesas)
+
+        # SUBSEÇÃO: Buscar saldo bancário atual
         bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
         saldo_banco = bank.total_balance if bank else 0
-        
+
         session.close()
-        
-        # calcular porcentagem de economia (savings)
-        economia = receitas - despesas
-        if receitas > 0:
-            pct = economia / receitas * 100
-        else:
-            pct = 0.0
-        
+
         report = f"""
 
 
@@ -76,66 +143,45 @@ def generate_simple_report(user_id, db):
 📈 Transações Este Mês: {len(entries)}
 """
         return report
-        return report
     except Exception as e:
         return f"❌ Erro ao gerar relatório: {str(e)}"
 
+# ==========================
+# RELATÓRIO DETALHADO
+# ==========================
+
 def generate_detailed_report(user_id, db):
-    """Relatorio detalhado com categorias"""
+    """Relatório detalhado com categorias e últimas transações"""
     try:
         session = db['Session']()
         current_month = datetime.now().month
         current_year = datetime.now().year
-        
-        # Buscar transacoes do mês atual
+
+        # SUBSEÇÃO: Buscar transações do mês atual
         entries = session.query(db['Entry']).filter_by(user_id=user_id).filter(
             db['Entry'].date >= datetime(current_year, current_month, 1)
         ).all()
-        
-        # Calcular totais do mês
-        receitas = sum(e.amount for e in entries if e.type == 'receita')
-        despesas = sum(e.amount for e in entries if e.type == 'despesa')
-        
-        # Agrupar por categoria
-        categorias = {}
-        for e in entries:
-            cat = e.category
-            if cat not in categorias:
-                categorias[cat] = {'receitas': 0, 'despesas': 0, 'count': 0}
-            if e.type == 'receita':
-                categorias[cat]['receitas'] += e.amount
-            else:
-                categorias[cat]['despesas'] += e.amount
-            categorias[cat]['count'] += 1
-        
-        # Buscar saldo bancario atual
+
+        # SUBSEÇÃO: Calcular totais e categorias
+        receitas, despesas, categorias = _calcular_totais_e_categorias(entries)
+        pct = _calcular_economia_pct(receitas, despesas)
+        categorias_text = _formatar_categorias_text(categorias)
+
+        # SUBSEÇÃO: Buscar saldo bancário atual
         bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
         saldo_banco = bank.total_balance if bank else 0
-        
-        session.close()
-        
-        # Montar relatorio de categorias
-        categorias_text = ""
-        for cat, data in sorted(categorias.items()):
-            total_cat = data['receitas'] - data['despesas']
-            categorias_text += f"📂 {cat}: {format_money(total_cat)} ({data['count']} transações)\n"
-        
-        if not categorias_text:
-            categorias_text = "Nenhuma transação registrada ainda.\n"
-        
-        # Ultimas 5 transacoes
+
+        # SUBSEÇÃO: Últimas 5 transações
         ultimas = entries[-5:] if entries else []
         ultimas_text = ""
         for e in reversed(ultimas):
             ultimas_text += f"• {format_date(e.date)}: {e.type} {format_money(e.amount)} - {e.description}\n"
-        
+
         if not ultimas_text:
             ultimas_text = "Nenhuma transação registrada ainda."
-        
-        # porcentagem de economia
-        economia = receitas - despesas
-        pct = economia / receitas * 100 if receitas > 0 else 0.0
-        
+
+        session.close()
+
         report = f"""
 
 
@@ -159,33 +205,42 @@ def generate_detailed_report(user_id, db):
     except Exception as e:
         return f"❌ Erro ao gerar relatório: {str(e)}"
 
-def generate_weekly_report(user_id, db):
-    """Relatorio dos ultimos 7 dias"""
+def _gerar_relatorio_periodo(user_id, data_inicio, data_fim, titulo, db):
+    """Função auxiliar para gerar relatórios de período
+
+    Args:
+        user_id: ID do usuário
+        data_inicio: Data inicial do período
+        data_fim: Data final do período
+        titulo: Título do relatório
+        db: Conexão do banco
+
+    Returns:
+        str: Relatório formatado
+    """
     try:
         session = db['Session']()
-        
-        week_ago = datetime.now() - timedelta(days=7)
-        
-        # Buscar transacoes da semana
+
+        # SUBSEÇÃO: Buscar transações do período
         entries = session.query(db['Entry']).filter(
             db['Entry'].user_id == user_id,
-            db['Entry'].date >= week_ago
+            db['Entry'].date >= data_inicio,
+            db['Entry'].date <= data_fim
         ).all()
-        
-        # Calcular totais
-        receitas = sum(e.amount for e in entries if e.type == 'receita')
-        despesas = sum(e.amount for e in entries if e.type == 'despesa')
+
+        # SUBSEÇÃO: Calcular totais
+        receitas, despesas, _ = _calcular_totais_e_categorias(entries)
         saldo = receitas - despesas
-        
+
         session.close()
-        
+
         report = f"""
 
 
-📊 RELATÓRIO SEMANAL (Últimos 7 dias)
+📊 {titulo}
 
 👤 Usuário: {user_id}
-📅 Período: {format_date(week_ago)} até {format_date(datetime.now())}
+📅 Período: {format_date(data_inicio)} até {format_date(data_fim)}
 
 💰 Total: {format_money(saldo)}
 💚 Receitas: {format_money(receitas)}
@@ -196,41 +251,104 @@ def generate_weekly_report(user_id, db):
         return report
     except Exception as e:
         return f"❌ Erro ao gerar relatório: {str(e)}"
+
+
+def generate_weekly_report(user_id, db):
+    """Relatório dos últimos 7 dias"""
+    week_ago = datetime.now() - timedelta(days=7)
+    return _gerar_relatorio_periodo(
+        user_id,
+        week_ago,
+        datetime.now(),
+        "RELATÓRIO SEMANAL (Últimos 7 dias)",
+        db
+    )
+
 
 def generate_monthly_report(user_id, db):
-    """Relatorio dos ultimos 30 dias"""
+    """Relatório dos últimos 30 dias"""
+    month_ago = datetime.now() - timedelta(days=30)
+    return _gerar_relatorio_periodo(
+        user_id,
+        month_ago,
+        datetime.now(),
+        "RELATÓRIO MENSAL (Últimos 30 dias)",
+        db
+    )
+
+# ==========================
+# RELATÓRIOS ESPECIAIS
+# ==========================
+
+def generate_month_specific_report(user_id, month_number, db):
+    """Gera relatório de um mês específico do ano atual"""
     try:
         session = db['Session']()
-        
-        month_ago = datetime.now() - timedelta(days=30)
-        
-        # Buscar transacoes do mes
-        entries = session.query(db['Entry']).filter(
-            db['Entry'].user_id == user_id,
-            db['Entry'].date >= month_ago
+        current_year = datetime.now().year
+
+        # SUBSEÇÃO: Mapeamento de nomes dos meses
+        month_names = {
+            1: 'Janeiro', 2: 'Fevereiro', 3: 'Março', 4: 'Abril',
+            5: 'Maio', 6: 'Junho', 7: 'Julho', 8: 'Agosto',
+            9: 'Setembro', 10: 'Outubro', 11: 'Novembro', 12: 'Dezembro'
+        }
+
+        month_name = month_names.get(month_number, f'Mês {month_number}')
+
+        # SUBSEÇÃO: Definir período do mês
+        start_date = datetime(current_year, month_number, 1)
+        if month_number == 12:
+            end_date = datetime(current_year + 1, 1, 1)
+        else:
+            end_date = datetime(current_year, month_number + 1, 1)
+
+        # SUBSEÇÃO: Buscar transações do mês específico
+        entries = session.query(db['Entry']).filter_by(user_id=user_id).filter(
+            db['Entry'].date >= start_date,
+            db['Entry'].date < end_date
         ).all()
-        
-        # Calcular totais
-        receitas = sum(e.amount for e in entries if e.type == 'receita')
-        despesas = sum(e.amount for e in entries if e.type == 'despesa')
-        saldo = receitas - despesas
-        
+
+        # SUBSEÇÃO: Calcular totais e categorias
+        receitas, despesas, categorias = _calcular_totais_e_categorias(entries)
+        pct = _calcular_economia_pct(receitas, despesas)
+        categorias_text = _formatar_categorias_text(categorias)
+
+        # SUBSEÇÃO: Buscar saldo atual
+        bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
+        saldo_atual = bank.total_balance if bank else 0
+
+        # SUBSEÇÃO: Últimas transações do mês
+        ultimas = entries[-5:] if entries else []
+        ultimas_text = ""
+        for e in reversed(ultimas):
+            ultimas_text += f"• {format_date(e.date)}: {e.type} {format_money(e.amount)} - {e.description}\n"
+
+        if not ultimas_text:
+            ultimas_text = "Nenhuma transação registrada neste mês."
+
         session.close()
-        
+
         report = f"""
 
-        
-📊 RELATÓRIO MENSAL (Últimos 30 dias)
+
+📊 RELATÓRIO DE {month_name.upper()} {current_year}
 
 👤 Usuário: {user_id}
-📅 Período: {format_date(month_ago)} até {format_date(datetime.now())}
+📅 Mês: {month_name} {current_year}
+🏦 Saldo Atual: {format_money(saldo_atual)}
 
-💰 Total: {format_money(saldo)}
-💚 Receitas: {format_money(receitas)}
-❤️ Despesas: {format_money(despesas)}
+💚 Receitas do Mês: {format_money(receitas)}
+❤️ Despesas do Mês: {format_money(despesas)}
+💡 Economia: ({pct:.1f}% das receitas)
 
-📈 Transações neste período: {len(entries)}
+📂 Por Categoria:
+{categorias_text}
+
+📝 Últimas Transações:
+{ultimas_text}
+
+📈 Total de Transações: {len(entries)}
 """
         return report
     except Exception as e:
-        return f"❌ Erro ao gerar relatório: {str(e)}"
+        return f"❌ Erro ao gerar relatório do mês: {str(e)}"
