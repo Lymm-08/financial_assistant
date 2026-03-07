@@ -59,6 +59,7 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
 
     await update.message.reply_text(text, reply_markup=reply_markup)
 
+
 # ==========================
 # SEÇÃO: PROCESSAMENTO DE MENSAGENS
 # ==========================

@@ -19,7 +19,7 @@ HF_TOKEN = os.getenv('HF_API_TOKEN', '')
 # REGRAS DE FALLBACK
 # ==========================
 
-# SUBSEÇÃO: Dicionário de categorias e palavras-chave
+# SUBSEÇÃO: Dicionário de categorias e palavras-chave ( fallback para quando a IA não estiver disponível)
 FALLBACK_RULES = {
     'Transporte': ['uber', 'taxi', 'ônibus', 'metrô', 'combustível', 'gasolina', 'passagem', 'trem', 'voo', 'avião', 'estacionamento', 'pedágio', 'transporte'],
     'Alimentação': ['pizza', 'restaurante', 'comida', 'café', 'almoço', 'jantar', 'lanche', 'padaria', 'açaí', 'hamburger', 'sorvete', 'adega', 'mercado', 'feira', 'hortifruti', 'supermercado'],
@@ -107,11 +107,4 @@ def categorize(description: str) -> str:
 
     # SUBSEÇÃO: Usar fallback se IA falhar
     return fallback_categorize(description)
-
-# ==========================
-# FUNÇÃO AUXILIAR PARA TESTES (OPCIONAL)
-# ==========================
-
-# Nota: categorize_with_confidence foi removida por não ser utilizada
-# Se precisar no futuro, implemente com lógica de confiança proper
 
