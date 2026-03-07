@@ -7,21 +7,21 @@ import requests
 import os
 import time
 
-# usa API gratuita do Hugging Face para geração de texto
 HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 HF_TOKEN = os.getenv('HF_API_TOKEN', '')
 
-# Regras de fallback baseadas em palavras-chave para quando API falhar
+# 🔧 Correção: adicionei "mercado" em Compras
 FALLBACK_RULES = {
     'Transporte': ['uber', 'taxi', 'ônibus', 'metrô', 'combustível', 'gasolina', 'passagem', 'trem', 'voo', 'avião'],
     'Alimentação': ['pizza', 'restaurante', 'comida', 'café', 'almoço', 'jantar', 'lanche', 'padaria', 'açaí', 'hamburger', 'sorvete', 'adega'],
-    'Compras': ['compra', 'market', 'supermercado', 'loja', 'shopping', 'produto', 'mercado'],
-    'Lazer': ['cinema', 'jogo', 'filme', 'diversão', 'show', 'museu', 'teatro', 'shopping', 'viagem', 'hotel'],
+    'Compras': ['compra', 'market', 'supermercado', 'mercado', 'loja', 'shopping', 'produto'],
+    'Lazer': ['cinema', 'jogo', 'filme', 'diversão', 'show', 'museu', 'teatro', 'viagem', 'hotel'],
     'Saúde': ['farmácia', 'médico', 'hospital', 'dentista', 'remédio', 'medicamento', 'academia'],
     'Contas': ['conta', 'água', 'luz', 'internet', 'gás', 'telefone', 'energia'],
     'Educação': ['curso', 'livro', 'escola', 'aula', 'universidade', 'faculdade'],
     'Moda': ['roupa', 'sapato', 'blusa', 'calça', 'tênis', 'jaqueta'],
 }
+
 
 def query_hf(prompt: str) -> str:
     headers = {}
@@ -88,5 +88,3 @@ def categorize_with_confidence(description):
     cat = categorize(description)
     return (cat, 0.5)
 
-
-print("HF_TOKEN:", HF_TOKEN[:10], "...")

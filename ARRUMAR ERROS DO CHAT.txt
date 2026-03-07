@@ -1,0 +1,23 @@
+ARRUMAR ERROS DO CHAT
+
+obs: o bot já esta no background e não é pra tira-lo dele ok, mas começou a dar erro dps disso. ent arruma e deixa ele no back ainda
+
+obs: o projeto já tem um repositório no GitHub privado só pra ter como backup mesmo, ent vai precisar fzr commits nas mudanças.
+
+- não reconhece algumas palavras pra categorizar como "mercado" por exemplo
+- coloquei 52,4 e ele marcou que era 4 reais
+- todas as categorias e descrições ele pergunta se é despesa ou receita, sendo q era só pra fazer isso quando tivesse a descrição inconclusiva não sempre
+-
+
+adicionar:
+
+- um comando /reset pra reiniciar tudo e ele excluir as transações anteriores, ou quando a pessoa quiser começar tudo de novo ela da reset ai o saldo e despesa aparece zero e ela tem q colocar tudo de novo
+
+- na mensagem de bem vindo colocar o botão reset com explicação
+
+- quando da start mostra a mensagem de boas vindas e quero q após isso caso a pessoa seja um usuário novo(o bot vai ter q saber se é a primeira vez da pessoa usando) ele mande um botão de /inserir saldo inicial e ai a pessoa coloca quanto ela jaa tem no banco
+
+- opção de por /ajustar saldo
+
+- ver se ele sabe quando o mês acaba, pq quando acabar o mês ele vai zerar as transações e deixar apenas o saldo atual para começar a receber as transações do mês q entrou
+

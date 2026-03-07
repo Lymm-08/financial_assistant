@@ -9,25 +9,18 @@ from datetime import datetime
 def parse_money(text):
     """
     Extrai valor monetário do texto
-    
-    Exemplos:
-    - "20 reais" -> 20.0
-    - "R$ 50,00" -> 50.0
-    - "100.50" -> 100.50
+    🔧 Correção: regex aceita números com vírgula/ponto sem truncar
     """
-    # Remove símbolos de moeda
     clean = re.sub(r'[R$\s]', '', text)
-    # Converte vírgula em ponto
     clean = clean.replace(',', '.')
-    
     try:
-        match = re.search(r'\d+(?:\.\d{2})?', clean)
+        match = re.search(r'\d+(?:\.\d+)?', clean)  # corrigido
         if match:
             return float(match.group())
     except:
         pass
-    
     return None
+
 
 def parse_date(text):
     """
