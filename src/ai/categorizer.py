@@ -1,16 +1,25 @@
 # ==========================
 # ARQUIVO: src/ai/categorizer.py
-# CATEGORIZAÇÃO INTELIGENTE COM FALLBACK
+# SISTEMA DE CATEGORIZAÇÃO INTELIGENTE
+# ==========================
+
+# ==========================
+# IMPORTAÇÕES E CONFIGURAÇÕES
 # ==========================
 
 import requests
 import os
 import time
 
+# SUBSEÇÃO: Configuração da API Hugging Face
 HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 HF_TOKEN = os.getenv('HF_API_TOKEN', '')
 
-# 🔧 Correção: adicionei "mercado" em Compras
+# ==========================
+# REGRAS DE FALLBACK
+# ==========================
+
+# SUBSEÇÃO: Dicionário de categorias e palavras-chave
 FALLBACK_RULES = {
     'Transporte': ['uber', 'taxi', 'ônibus', 'metrô', 'combustível', 'gasolina', 'passagem', 'trem', 'voo', 'avião', 'estacionamento', 'pedágio', 'transporte'],
     'Alimentação': ['pizza', 'restaurante', 'comida', 'café', 'almoço', 'jantar', 'lanche', 'padaria', 'açaí', 'hamburger', 'sorvete', 'adega', 'mercado', 'feira', 'hortifruti', 'supermercado'],
@@ -22,26 +31,34 @@ FALLBACK_RULES = {
     'Moda': ['roupa', 'sapato', 'blusa', 'calça', 'tênis', 'jaqueta', 'acessório'],
 }
 
+# ==========================
+# FUNÇÕES DE IA
+# ==========================
+
+# ==========================
+# CONSULTA À API HUGGING FACE
+# ==========================
 
 def query_hf(prompt: str) -> str:
+    """Consulta a API do Hugging Face para categorização inteligente"""
     headers = {}
     if HF_TOKEN:
         headers['Authorization'] = f'Bearer {HF_TOKEN}'
+
     tries = 3
     for attempt in range(tries):
         try:
             resp = requests.post(HF_API_URL, headers=headers, json={"inputs": prompt}, timeout=15)
             print("HF resposta:", resp.status_code, resp.text)  # log para debug
+
             if resp.ok:
                 data = resp.json()
-                # Caso de erro (modelo carregando ou indisponível)
+                # SUBSEÇÃO: Tratamento de diferentes formatos de resposta
                 if isinstance(data, dict) and 'error' in data:
                     time.sleep(2)  # espera e tenta de novo
                     continue
-                # Caso padrão: lista com generated_text
                 if isinstance(data, list) and 'generated_text' in data[0]:
                     return data[0]['generated_text']
-                # Alguns modelos retornam string direta
                 if isinstance(data, str):
                     return data
             else:
@@ -49,10 +66,15 @@ def query_hf(prompt: str) -> str:
         except Exception as e:
             print("Exceção HF:", e)
         time.sleep(1)
+
     return ''
 
+# ==========================
+# FALLBACK POR PALAVRAS-CHAVE
+# ==========================
+
 def fallback_categorize(description: str) -> str:
-    """Fallback inteligente: busca palavras-chave na descrição"""
+    """Categoriza baseado em palavras-chave quando IA falha"""
     desc_lower = description.lower()
     for category, keywords in FALLBACK_RULES.items():
         for keyword in keywords:
@@ -60,31 +82,35 @@ def fallback_categorize(description: str) -> str:
                 return category
     return 'Outros'
 
+# ==========================
+# FUNÇÃO PRINCIPAL DE CATEGORIZAÇÃO
+# ==========================
+
 def categorize(description: str) -> str:
-    """Chama a API para classificar a descrição em uma categoria"""
+    """Categoriza uma descrição usando IA + fallback"""
     if not description:
         return 'Outros'
+
+    # SUBSEÇÃO: Prompt para a IA
     prompt = (
         f"Classifique a seguinte descrição de transação financeira em uma única categoria."
-        f"\nDescrição: {description}\nCategoria:"    
+        f"\nDescrição: {description}\nCategoria:"
     )
+
     result = query_hf(prompt)
     if result:
         parts = result.split('Categoria:')
         cat = parts[-1].strip().split('\n')[0].strip()
         if cat and len(cat) > 1:  # evitar caracteres únicos
             return cat
-    # Usar fallback inteligente baseado em keywords
+
+    # SUBSEÇÃO: Usar fallback se IA falhar
     return fallback_categorize(description)
 
-def categorize_with_confidence(description):
-    """
-    Categoriza uma transação baseado na descrição usando API
-    
-    Retorna: (categoria, confiança)
-    """
-    if not description:
-        return ('Outros', 0.0)
-    cat = categorize(description)
-    return (cat, 0.5)
+# ==========================
+# FUNÇÃO AUXILIAR PARA TESTES (OPCIONAL)
+# ==========================
+
+# Nota: categorize_with_confidence foi removida por não ser utilizada
+# Se precisar no futuro, implemente com lógica de confiança proper
 
