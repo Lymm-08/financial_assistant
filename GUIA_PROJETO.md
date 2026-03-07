@@ -797,6 +797,171 @@ python main.py
 
 **Se tiver dúvidas, releia este documento. Tudo está aqui!**
 
+---
+
+# 📁 DESCRIÇÃO DETALHADA DE CADA PASTA
+
+## Estrutura Geral do Projeto
+
+```
+bot_financeiro/
+├── main.py                 # 🏠 PONTO DE ENTRADA - Executa o bot
+├── requirements.txt        # 📦 DEPENDÊNCIAS - Lista de pacotes Python
+├── .env                    # 🔐 CONFIGURAÇÕES SENSÍVEIS - Tokens, senhas
+├── .gitignore             # 🚫 ARQUIVOS IGNORADOS - Não subir para git
+├── README.md              # 📖 RESUMO RÁPIDO - Visão geral
+├── GUIA_PROJETO.md        # 📚 GUIA COMPLETO - Este arquivo
+├── TCC_DOCUMENTACAO.md    # 🎓 DOCUMENTAÇÃO TCC - Técnica detalhada
+└── src/                   # 📁 CÓDIGO FONTE MODULAR
+    ├── __init__.py        # 🔗 INICIALIZADOR - Torna pasta um módulo
+    ├── config/            # ⚙️ CONFIGURAÇÕES
+    │   ├── __init__.py
+    │   └── config.py      # Carrega variáveis de ambiente (.env)
+    ├── models/            # 🗄️ MODELOS DE DADOS
+    │   ├── __init__.py
+    │   └── db.py          # Definição das tabelas Entry e Bank
+    ├── commands/          # 🎮 COMANDOS DO BOT
+    │   ├── __init__.py
+    │   └── handlers.py    # Processa mensagens e comandos Telegram
+    ├── ai/                # 🤖 INTELIGÊNCIA ARTIFICIAL
+    │   ├── __init__.py
+    │   └── categorizer.py # Categoriza transações automaticamente
+    ├── utils/             # 🛠️ UTILITÁRIOS
+    │   ├── __init__.py
+    │   ├── formatter.py   # Formata dinheiro e datas
+    │   ├── parser.py      # Extrai valores de textos
+    │   └── encryption.py  # Criptografa dados sensíveis
+    └── services/          # 📊 SERVIÇOS
+        ├── __init__.py
+        └── reports.py     # Gera relatórios financeiros
+```
+
+## O Que Faz Cada Pasta
+
+### `src/config/` - CONFIGURAÇÕES DO SISTEMA
+- **Propósito:** Centralizar todas as configurações do projeto
+- **Arquivo principal:** `config.py`
+- **Função:** Carrega variáveis do arquivo `.env` (BOT_TOKEN, DB_URI, etc.)
+- **Importância:** Permite configurar o bot sem alterar código
+
+### `src/models/` - BANCO DE DADOS
+- **Propósito:** Definir estrutura e conexão com banco
+- **Arquivo principal:** `db.py`
+- **Conteúdo:** Modelos SQLAlchemy para tabelas `entries` e `banks`
+- **Função:** CRUD completo (Create, Read, Update, Delete)
+
+### `src/commands/` - INTERAÇÃO COM USUÁRIO
+- **Propósito:** Processar comandos e mensagens do Telegram
+- **Arquivo principal:** `handlers.py`
+- **Função:** Recebe mensagens, processa valores, salva no banco
+- **Comandos:** `/start`, `/relatorio`, `/reset`, `/ajustar_saldo`
+
+### `src/ai/` - INTELIGÊNCIA ARTIFICIAL
+- **Propósito:** Categorizar transações automaticamente
+- **Arquivo principal:** `categorizer.py`
+- **Tecnologia:** API Hugging Face (Flan-T5)
+- **Função:** Analisa descrição e sugere categoria apropriada
+
+### `src/utils/` - FERRAMENTAS AUXILIARES
+- **Propósito:** Funções utilitárias reutilizáveis
+- **Arquivos:**
+  - `formatter.py`: Formatação de moeda e datas
+  - `parser.py`: Extração de valores de textos
+  - `encryption.py`: Criptografia de dados sensíveis
+
+### `src/services/` - LÓGICA DE NEGÓCIO
+- **Propósito:** Serviços complexos do sistema
+- **Arquivo principal:** `reports.py`
+- **Função:** Gera relatórios financeiros (simples, completo, semanal, mensal)
+
+---
+
+# 🎤 ROTEIRO PARA APRESENTAÇÃO DO TCC
+
+## Estrutura da Apresentação (15-20 minutos)
+
+### 1️⃣ INTRODUÇÃO (2 minutos)
+**"Bom dia/tarde, professor(a). Hoje apresentarei meu TCC: um Bot Financeiro Inteligente para Telegram desenvolvido em Python."**
+
+- **Problema:** Pessoas esquecem de registrar gastos, dificultando controle financeiro
+- **Solução:** Bot chatbot intuitivo que registra transações via chat
+- **Objetivo:** Demonstrar aplicação prática de conceitos de engenharia de software
+
+### 2️⃣ DEMONSTRAÇÃO PRÁTICA (5 minutos)
+**"Vou mostrar o bot funcionando ao vivo."**
+
+- Abrir Telegram no celular/projetor
+- **Comando `/start`:** Mostrar menu com botões
+- **Usuário novo:** Demonstrar botão "Inserir saldo inicial"
+- **Registrar transação:** Digitar "52,4 mercado" → mostrar categorização automática
+- **Relatório:** Comando `/relatorio simples` → mostrar resumo financeiro
+- **Reset mensal:** Explicar como zera transações automaticamente no fim do mês
+
+### 3️⃣ ARQUITETURA DO SISTEMA (5 minutos)
+**"Agora explicarei a arquitetura técnica do projeto."**
+
+- **Tecnologias:** Python + Telegram API + PostgreSQL + SQLAlchemy
+- **Estrutura modular:** Explicar cada pasta (config, models, commands, ai, utils, services)
+- **Fluxo de dados:** Mensagem → Parser → Categorização → Banco → Resposta
+- **IA integrada:** Hugging Face API para categorização inteligente
+
+### 4️⃣ FUNCIONALIDADES PRINCIPAIS (3 minutos)
+**"As principais funcionalidades implementadas:"**
+
+- ✅ **Registro inteligente:** Extrai valor e descrição automaticamente
+- ✅ **Categorização IA:** 8+ categorias com fallback inteligente
+- ✅ **Relatórios:** 4 tipos diferentes (simples, completo, semanal, mensal)
+- ✅ **Persistência:** Dados salvos em PostgreSQL
+- ✅ **Segurança:** Criptografia de dados sensíveis
+- ✅ **Reset automático:** Zera transações mensalmente
+
+### 5️⃣ DESAFIOS E SOLUÇÕES (3 minutos)
+**"Durante o desenvolvimento, enfrentei alguns desafios:"**
+
+- **Desafio 1:** Parsing de valores brasileiros (vírgula/ponto)
+  - **Solução:** Regex robusto que aceita "52,4" e "52.4"
+- **Desafio 2:** Categorização imprecisa
+  - **Solução:** API Hugging Face + fallback com keywords
+- **Desafio 3:** Reset mensal automático
+  - **Solução:** Verificação de mudança de mês no banco de dados
+
+### 6️⃣ CONCLUSÃO (2 minutos)
+**"Em conclusão, este projeto demonstra:"**
+
+- Aplicação prática de conceitos de programação
+- Integração de múltiplas tecnologias
+- Arquitetura modular e escalável
+- Solução real para problema cotidiano
+- Potencial para expansão (múltiplos usuários, web interface, etc.)
+
+**"Obrigado pela atenção. Alguma pergunta?"**
+
+---
+
+## 💡 DICAS PARA APRESENTAÇÃO
+
+### Preparação:
+- ✅ Teste o bot antes (certifique-se que está funcionando)
+- ✅ Tenha screenshots/diagramas prontos
+- ✅ Cronometre a apresentação (15-20 min)
+- ✅ Prepare respostas para perguntas comuns
+
+### Durante Apresentação:
+- Fale devagar e claro
+- Mostre código quando explicar arquitetura
+- Demonstre funcionalidades ao vivo
+- Mantenha contato visual com avaliador
+
+### Perguntas Frequentes:
+- **"Por que Telegram?"** → Interface familiar, gratuita, multiplataforma
+- **"Como funciona a IA?"** → API Hugging Face classifica descrições
+- **"Banco de dados?"** → PostgreSQL para persistência e consultas complexas
+- **"Escalabilidade?"** → Arquitetura modular permite expansão fácil
+
+---
+
+**Data da última atualização:** 07/03/2026
+
 
 # commit (🔄 Como recuperar versões antigas) 
 
