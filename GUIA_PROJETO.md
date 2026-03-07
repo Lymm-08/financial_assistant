@@ -277,16 +277,18 @@ Uma janela abre com propriedades. Vá em:
 Abra Telegram, procure seu bot e envie:
 
 ```
-/iniciar                    - Menu principal
+/start ou /iniciar         - Menu principal com botões
 /relatorio simples          - Resumo rápido
 /relatorio completo         - Detalhes com categorias
 /relatorio semanal          - Últimos 7 dias
 /relatorio mensal           - Últimos 30 dias
-
-20 reais pizza              - Registrar despesa de R$20
-50 pizza                    - Mesmo acima (simplificado)
-recebi 1000 salário         - Registrar receita
+/reset                      - Zerar todas as transações e saldo
+/ajustar_saldo 1000         - Ajustar saldo manualmente
 ```
+
+**Botões no /start:**
+- 🔄 Reset: Zera tudo
+- ➕ Inserir saldo inicial: Para usuários novos
 
 ## Exemplos de Uso
 
@@ -298,6 +300,42 @@ recebi 1000 salário         - Registrar receita
   Valor: R$ 20,00
   Categoria: Alimentação
   Tipo: despesa
+  ```
+
+**Usuário Novo:**
+- Envie `/start`
+- Clique "➕ Inserir saldo inicial"
+- Digite: `1500`
+- Saldo definido como R$ 1.500,00
+
+**Resetar Tudo:**
+- Envie `/reset` ou clique no botão
+- Todas transações apagadas, saldo = 0
+
+**Ajustar Saldo:**
+- Envie `/ajustar_saldo 2500`
+- Saldo alterado para R$ 2.500,00
+
+**Mudança de Mês:**
+- Quando o mês muda, transações são zeradas automaticamente
+- Saldo atual é mantido para o novo mês
+
+## 🔧 Correções e Melhorias Recentes
+
+### Erros Corrigidos:
+- **Categorização:** Adicionadas mais palavras-chave para "mercado", "feira", etc. em Alimentação/Compras
+- **Parsing de Valores:** Melhorado regex para aceitar valores com vírgula/ponto corretamente
+- **Perguntas Desnecessárias:** Agora só pergunta receita/despesa quando realmente inconclusivo (categoria 'Outros' e sem palavras-chave)
+- **Usuários Novos:** Botão "Inserir saldo inicial" só aparece para usuários sem transações
+
+### Novos Comandos:
+- `/reset`: Zera todas transações e saldo
+- `/ajustar_saldo <valor>`: Ajusta saldo manualmente
+- Botões interativos no /start
+
+### Funcionalidades Automáticas:
+- **Reset Mensal:** Ao mudar o mês, transações são zeradas, saldo mantido
+- **Callbacks:** Botões funcionais para reset e inserir saldo
   Data: 05/03/2026 19:30
   ```
 
