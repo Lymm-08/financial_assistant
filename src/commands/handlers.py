@@ -108,13 +108,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE, db)
 
     tipo = 'receita' if eh_receita else 'despesa'
     
-    # Verificar mudança de mês
+    # Verificar mudança de mês (apenas atualizar last_month, manter histórico)
     session = db['Session']()
     current_month = datetime.now().month
     bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
     if bank and bank.last_month != 0 and bank.last_month != current_month:
-        # Zerar transações do mês anterior
-        session.query(db['Entry']).filter_by(user_id=user_id).delete()
+        # Apenas atualizar o mês, manter transações históricas salvas
         bank.last_month = current_month
         session.commit()
     

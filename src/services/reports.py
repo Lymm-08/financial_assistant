@@ -33,21 +33,24 @@ def generate_report(user_id, report_type='simples', db=None):
         return generate_simple_report(user_id, db)
 
 def generate_simple_report(user_id, db):
-    """Relatorio simples com resumo"""
+    """Relatorio simples com resumo do mês atual"""
     try:
         session = db['Session']()
+        current_month = datetime.now().month
+        current_year = datetime.now().year
         
-        # Buscar todas as transacoes do usuario
-        entries = session.query(db['Entry']).filter_by(user_id=user_id).all()
+        # Buscar transacoes do mês atual
+        entries = session.query(db['Entry']).filter_by(user_id=user_id).filter(
+            db['Entry'].date >= datetime(current_year, current_month, 1)
+        ).all()
         
-        # Calcular totais
+        # Calcular totais do mês
         receitas = sum(e.amount for e in entries if e.type == 'receita')
         despesas = sum(e.amount for e in entries if e.type == 'despesa')
-        saldo = receitas - despesas
         
-        # Buscar saldo bancario
+        # Buscar saldo bancario atual
         bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
-        saldo_banco = bank.total_balance if bank else saldo
+        saldo_banco = bank.total_balance if bank else 0
         
         session.close()
         
@@ -61,18 +64,18 @@ def generate_simple_report(user_id, db):
         report = f"""
 
 
-📊 RELATÓRIO SIMPLES
+📊 RELATÓRIO SIMPLES (MÊS ATUAL)
 
 👤 Usuário: {user_id}
-📅 Data: {format_date(datetime.now())}
-
-💰 Saldo Total: {format_money(saldo_banco)}
-💚 Receitas: {format_money(receitas)}
-❤️ Despesas: {format_money(despesas)}
+📅 Mês Atual: {datetime.now().strftime('%B %Y')}
+💰 Saldo Atual: {format_money(saldo_banco)}
+💚 Receitas do Mês: {format_money(receitas)}
+❤️ Despesas do Mês: {format_money(despesas)}
 💡 Economia: ({pct:.1f}% das receitas)
 
-📈 Total de Transações: {len(entries)}
+📈 Transações Este Mês: {len(entries)}
 """
+        return report
         return report
     except Exception as e:
         return f"❌ Erro ao gerar relatório: {str(e)}"
@@ -81,14 +84,17 @@ def generate_detailed_report(user_id, db):
     """Relatorio detalhado com categorias"""
     try:
         session = db['Session']()
+        current_month = datetime.now().month
+        current_year = datetime.now().year
         
-        # Buscar transacoes
-        entries = session.query(db['Entry']).filter_by(user_id=user_id).all()
+        # Buscar transacoes do mês atual
+        entries = session.query(db['Entry']).filter_by(user_id=user_id).filter(
+            db['Entry'].date >= datetime(current_year, current_month, 1)
+        ).all()
         
-        # Calcular totais
+        # Calcular totais do mês
         receitas = sum(e.amount for e in entries if e.type == 'receita')
         despesas = sum(e.amount for e in entries if e.type == 'despesa')
-        saldo = receitas - despesas
         
         # Agrupar por categoria
         categorias = {}
@@ -102,9 +108,9 @@ def generate_detailed_report(user_id, db):
                 categorias[cat]['despesas'] += e.amount
             categorias[cat]['count'] += 1
         
-        # Buscar saldo bancario
+        # Buscar saldo bancario atual
         bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
-        saldo_banco = bank.total_balance if bank else saldo
+        saldo_banco = bank.total_balance if bank else 0
         
         session.close()
         
@@ -133,14 +139,14 @@ def generate_detailed_report(user_id, db):
         report = f"""
 
 
-📊 RELATÓRIO COMPLETO
+📊 RELATÓRIO COMPLETO (MÊS ATUAL)
 
 👤 Usuário: {user_id}
-📅 Data: {format_date(datetime.now())}
+📅 Mês Atual: {datetime.now().strftime('%B %Y')}
 
-💰 Saldo Total: {format_money(saldo_banco)}
-💚 Receitas: {format_money(receitas)}
-❤️ Despesas: {format_money(despesas)}
+💰 Saldo Atual: {format_money(saldo_banco)}
+💚 Receitas do Mês: {format_money(receitas)}
+❤️ Despesas do Mês: {format_money(despesas)}
 💡 Economia: ({pct:.1f}% das receitas)
 
 📂 Por Categoria:

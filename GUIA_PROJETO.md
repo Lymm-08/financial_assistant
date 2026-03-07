@@ -316,8 +316,8 @@ Abra Telegram, procure seu bot e envie:
 
 ```
 /start ou /iniciar         - Menu principal com botões
-/relatorio simples          - Resumo rápido
-/relatorio completo         - Detalhes com categorias
+/relatorio simples          - Resumo do mês atual
+/relatorio completo         - Detalhes do mês atual com categorias
 /relatorio semanal          - Últimos 7 dias
 /relatorio mensal           - Últimos 30 dias
 /reset                      - Zerar todas as transações e saldo
@@ -355,8 +355,9 @@ Abra Telegram, procure seu bot e envie:
 - Saldo alterado para R$ 2.500,00
 
 **Mudança de Mês:**
-- Quando o mês muda, transações são zeradas automaticamente
+- Quando o mês muda, transações são zeradas automaticamente na visualização
 - Saldo atual é mantido para o novo mês
+- Histórico completo permanece salvo para relatórios de períodos anteriores
 
 ## 🔧 Correções e Melhorias Recentes
 
