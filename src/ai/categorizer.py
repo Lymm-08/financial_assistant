@@ -23,7 +23,7 @@ HF_TOKEN = os.getenv('HF_API_TOKEN', '')
 FALLBACK_RULES = {
     'Transporte': ['uber', 'taxi', 'ônibus', 'metrô', 'combustível', 'gasolina', 'passagem', 'trem', 'voo', 'avião', 'estacionamento', 'pedágio', 'transporte'],
     'Alimentação': ['pizza', 'restaurante', 'comida', 'café', 'almoço', 'jantar', 'lanche', 'padaria', 'açaí', 'hamburger', 'sorvete', 'adega', 'mercado', 'feira', 'hortifruti', 'supermercado'],
-    'Compras': ['compra', 'market', 'supermercado', 'mercado', 'loja', 'shopping', 'produto', 'roupa', 'sapato', 'eletrônico', 'casa', 'decoração'],
+    'Compras': ['compra', 'market', 'cartao', 'cartão', 'parcela', 'supermercado', 'mercado', 'loja', 'shopping', 'produto', 'roupa', 'sapato', 'eletrônico', 'casa', 'decoração'],
     'Lazer': ['cinema', 'jogo', 'filme', 'diversão', 'show', 'museu', 'teatro', 'viagem', 'hotel', 'parque', 'entretenimento'],
     'Saúde': ['farmácia', 'médico', 'hospital', 'dentista', 'remédio', 'medicamento', 'academia', 'plano de saúde', 'consulta'],
     'Contas': ['conta', 'água', 'luz', 'internet', 'gás', 'telefone', 'energia', 'aluguel', 'condomínio'],

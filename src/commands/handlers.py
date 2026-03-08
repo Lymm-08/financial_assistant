@@ -38,26 +38,38 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
 
     is_new_user = entries_count == 0 and (not bank or bank.total_balance == 0)
 
-    text = f"""
-🤖 Bot Financeiro - Olá, {user.first_name}!
+    text = f"""🤖 Bot Financeiro - Olá {user.first_name}!
 
 💰 O que você pode fazer:
-• Registrar despesas/receitas digitando valores (ex: "52,4 mercado")
-• Gerar relatórios: /relatorio simples, /relatorio completo
-• Relatórios específicos: /relatorio mes 1 (janeiro), /relatorio mes 2 (fevereiro), etc.
-• Acompanhar saldo automaticamente
-• Reset mensal automático (transações zeram no novo mês, histórico salvo)
-• Comandos: /reset (zerar tudo), /ajustar_saldo 1000 (ajustar saldo)
+
+• 💸 Registrar despesas/receitas digitando valores
+  (ex: 30,9 pizza 🍕 ou 400 salario 💼, 22 recebi pix 💳...)
+
+• 📊 Gerar relatórios: simples e completo
+  (comandos: /relatorio simples e /relatorio completo)
+
+• 📅 Relatórios específicos: /relatorio mes (n° do mês)
+  (ex: /relatorio mes 8)
+
+• 🔄 Reset mensal automático:
+  (historico 📚 e saldo 💰 ficam salvos, transações zeram no novo mês)
+
+• ⚙️ Comandos:
+/reset (zerar tudo 🗑️)
+/ajustar_saldo (ajusta o saldo, ex: /ajustar_saldo 200 💵)
+
+----------------------------------------------------------
 """
 
     keyboard = []
     if is_new_user:
-        keyboard.append([InlineKeyboardButton("➕ Inserir saldo inicial", callback_data='inserir_saldo')])
-    keyboard.append([InlineKeyboardButton("🔄 Reset", callback_data='reset')])
+        keyboard.append([InlineKeyboardButton("+ Inserir saldo inicial", callback_data='inserir_saldo')])
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await update.message.reply_text(text, reply_markup=reply_markup)
+    if keyboard:
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text(text, reply_markup=reply_markup)
+    else:
+        await update.message.reply_text(text)
 
 
 # ==========================
