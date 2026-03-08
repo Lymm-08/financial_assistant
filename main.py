@@ -9,7 +9,6 @@
 
 import os
 import sys
-import logging
 from dotenv import load_dotenv
 
 # SUBSEÇÃO: Carregar variáveis de ambiente
@@ -18,6 +17,7 @@ load_dotenv()
 # SUBSEÇÃO: Importar módulos do projeto
 from src.config.config import config
 from src.models.db import init_db
+from src.models.migrate import migrate_db
 
 # ==========================
 # VALIDAÇÃO DE CONFIGURAÇÕES CRÍTICAS
@@ -36,6 +36,9 @@ if not config.get('BOT_TOKEN'):
 try:
     db_config = init_db(config.get('DB_URI', 'postgresql://postgres:nina2024@localhost:5432/bot_financeiro'))
     print('✅ Banco PostgreSQL inicializado com sucesso')
+    
+    # SUBSEÇÃO: Executar migrações
+    migrate_db(db_config['engine'])
 except Exception as e:
     print(f'❌ ERRO ao inicializar banco: {e}')
     sys.exit(1)
@@ -57,11 +60,6 @@ except ImportError as e:
 # FUNÇÃO PRINCIPAL
 # ==========================
 
-async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Log errors caused by updates."""
-    import logging
-    logging.error(msg="Exception while handling an update:", exc_info=context.error)
-
 def main():
     """Função principal que inicializa e executa o bot"""
     try:
@@ -70,9 +68,6 @@ def main():
 
         # SUBSEÇÃO: Registrar todos os comandos do bot
         register_commands(app, db_config)
-
-        # SUBSEÇÃO: Adicionar handler de erro
-        app.add_error_handler(error_handler)
 
         # SUBSEÇÃO: Iniciar bot com polling
         print('🚀 Bot Financeiro iniciado!')
