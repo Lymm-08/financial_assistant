@@ -83,7 +83,7 @@ def main():
     try:
         # SUBSEÇÃO: Tentar parar processos Python existentes
         kill_existing_python_processes()
-        
+
         # Pequena pausa para garantir que os processos foram terminados
         import time
         time.sleep(2)
@@ -94,14 +94,40 @@ def main():
         # SUBSEÇÃO: Registrar todos os comandos do bot
         register_commands(app, db_config)
 
-        # SUBSEÇÃO: Iniciar bot com polling
+        # SUBSEÇÃO: Iniciar bot com polling e tratamento de conflitos
         print('🚀 Bot Financeiro iniciado!')
         print(f'📊 Banco de dados: {config.get("DB_URI", "SQLite")}')
         print('📱 Pronto para receber mensagens...')
         print('(Pressione Ctrl+C para parar)')
 
         from telegram import Update
-        app.run_polling(allowed_updates=Update.ALL_TYPES)
+        from telegram.error import Conflict
+
+        # Tentar iniciar polling com tratamento de conflitos
+        max_retries = 3
+        retry_count = 0
+
+        while retry_count < max_retries:
+            try:
+                app.run_polling(allowed_updates=Update.ALL_TYPES)
+                break  # Sai do loop se conseguiu iniciar
+            except Conflict as e:
+                retry_count += 1
+                print(f'⚠️  Conflito detectado (tentativa {retry_count}/{max_retries}): {e}')
+                if retry_count < max_retries:
+                    print('🔄 Aguardando 10 segundos para tentar novamente...')
+                    time.sleep(10)
+                    # Tentar matar processos novamente
+                    kill_existing_python_processes()
+                    time.sleep(2)
+                else:
+                    print('❌ Muitas tentativas falharam. Verifique se há outra instância rodando.')
+                    sys.exit(1)
+            except Exception as e:
+                print(f'❌ ERRO ao iniciar bot: {e}')
+                import traceback
+                traceback.print_exc()
+                sys.exit(1)
 
     except KeyboardInterrupt:
         print('\n⏹️  Bot parado pelo usuário')

@@ -69,12 +69,51 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text(text, reply_markup=reply_markup)
     else:
+async def cmd_test(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
+    """Comando /test - Testar mensagem de boas-vindas"""
+    user = update.effective_user
+    user_id = str(user.id)
+
+    # Verificar se é usuário novo
+    session = db['Session']()
+    entries_count = session.query(db['Entry']).filter_by(user_id=user_id).count()
+    bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
+    session.close()
+
+    is_new_user = entries_count == 0 and (not bank or bank.total_balance == 0)
+
+    text = f"""🤖 Bot Financeiro - Olá {user.first_name}!
+
+💰 O que você pode fazer:
+
+• 💸 Registrar despesas/receitas digitando valores
+  (ex: 30,9 pizza 🍕 ou 400 salario 💼, 22 recebi pix 💳...)
+
+• 📊 Gerar relatórios: simples e completo
+  (comandos: /relatorio simples e /relatorio completo)
+
+• 📅 Relatórios específicos: /relatorio mes (n° do mês)
+  (ex: /relatorio mes 8)
+
+• 🔄 Reset mensal automático:
+  (historico 📚 e saldo 💰 ficam salvos, transações zeram no novo mês)
+
+• ⚙️ Comandos:
+/reset (zerar tudo 🗑️)
+/ajustar_saldo (ajusta o saldo, ex: /ajustar_saldo 200 💵)
+
+----------------------------------------------------------
+"""
+
+    keyboard = []
+    if is_new_user:
+        keyboard.append([InlineKeyboardButton("+ Inserir saldo inicial", callback_data='inserir_saldo')])
+
+    if keyboard:
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text(text, reply_markup=reply_markup)
+    else:
         await update.message.reply_text(text)
-
-
-# ==========================
-# SEÇÃO: PROCESSAMENTO DE MENSAGENS
-# ==========================
 
 # ==========================
 # HANDLER DE MENSAGENS LIVRES (REGISTRO DE TRANSAÇÕES)
@@ -421,6 +460,7 @@ def register_commands(app, db):
     # SUBSEÇÃO: Comandos principais
     app.add_handler(CommandHandler('start', partial(cmd_start, db=db)))
     app.add_handler(CommandHandler('iniciar', partial(cmd_start, db=db)))
+    app.add_handler(CommandHandler('test', partial(cmd_test, db=db)))
     app.add_handler(CommandHandler('relatorio', partial(cmd_relatorio, db=db)))
     app.add_handler(CommandHandler('receita', partial(cmd_confirma_receita, db=db)))
     app.add_handler(CommandHandler('despesa', partial(cmd_confirma_despesa, db=db)))
