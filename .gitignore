@@ -45,7 +45,6 @@ npm-debug.log*
 
 # Documentation (private)
 doc_texto/
-doc_guia/
 *.md.backup
 
 # IDE
