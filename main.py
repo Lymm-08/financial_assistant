@@ -9,6 +9,7 @@
 
 import os
 import sys
+import subprocess
 from dotenv import load_dotenv
 
 # SUBSEÇÃO: Carregar variáveis de ambiente
@@ -57,12 +58,36 @@ except ImportError as e:
     sys.exit(1)
 
 # ==========================
+# FUNÇÕES AUXILIARES
+# ==========================
+
+def kill_existing_python_processes():
+    """Tenta matar processos Python existentes para evitar conflitos"""
+    try:
+        # Usar taskkill para forçar parada de todos os processos python.exe
+        result = subprocess.run(['taskkill', '/F', '/IM', 'python.exe', '/T'], 
+                              capture_output=True, text=True, timeout=10)
+        if result.returncode == 0:
+            print('✅ Processos Python existentes foram terminados')
+        else:
+            print('ℹ️  Nenhum processo Python encontrado ou não foi possível terminar')
+    except Exception as e:
+        print(f'⚠️  Não foi possível verificar processos Python: {e}')
+
+# ==========================
 # FUNÇÃO PRINCIPAL
 # ==========================
 
 def main():
     """Função principal que inicializa e executa o bot"""
     try:
+        # SUBSEÇÃO: Tentar parar processos Python existentes
+        kill_existing_python_processes()
+        
+        # Pequena pausa para garantir que os processos foram terminados
+        import time
+        time.sleep(2)
+
         # SUBSEÇÃO: Criar aplicação do Telegram
         app = Application.builder().token(config.get('BOT_TOKEN')).build()
 
