@@ -62,14 +62,10 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
 """
 
     keyboard = []
-    if is_new_user:
-        keyboard.append([InlineKeyboardButton("+ Inserir saldo inicial", callback_data='inserir_saldo')])
+    keyboard.append([InlineKeyboardButton("+ Inserir saldo atual", callback_data='inserir_saldo')])
 
-    if keyboard:
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text(text, reply_markup=reply_markup)
-    else:
-        await update.message.reply_text(text)
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(text, reply_markup=reply_markup)
 
 # ==========================
 # HANDLER DE MENSAGENS LIVRES (REGISTRO DE TRANSAÇÕES)
