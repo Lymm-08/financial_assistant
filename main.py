@@ -82,11 +82,11 @@ def main():
     """Função principal que inicializa e executa o bot"""
     try:
         # SUBSEÇÃO: Tentar parar processos Python existentes
-        kill_existing_python_processes()
+        # kill_existing_python_processes()  # Desabilitado - causava conflitos
 
         # Pequena pausa para garantir que os processos foram terminados
         import time
-        time.sleep(2)
+        # time.sleep(2)  # Desabilitado - não necessário
 
         # SUBSEÇÃO: Criar aplicação do Telegram
         app = Application.builder().token(config.get('BOT_TOKEN')).build()

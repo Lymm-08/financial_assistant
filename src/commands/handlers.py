@@ -52,7 +52,7 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE, db):
   (ex: /relatorio mes 8)
 
 • 🔄 Reset mensal automático:
-  (historico 📚 e saldo 💰 ficam salvos, transações zeram no novo mês)
+   historico 📚 e saldo 💰 ficam salvos, transações zeram no novo mês
 
 • ⚙️ Comandos:
 /reset (zerar tudo 🗑️)
