@@ -67,11 +67,12 @@ def _calcular_economia(receitas, despesas):
 
 
 def _formatar_economia_text(receitas, despesas):
-    """Formata a economia como valor e percentual."""
+    """Formata a economia como valor em reais e percentual."""
     economia, pct = _calcular_economia(receitas, despesas)
-    if receitas > 0:
-        return f"{format_money(economia)} ({pct:.1f}% das receitas)"
-    return f"{format_money(economia)}"
+    if receitas == 0:
+        return f"{format_money(0)} ({pct:.1f}%)"
+
+    return f"{format_money(economia)} ({pct:.1f}%)"
 
 # ==========================
 # FUNÇÃO PRINCIPAL DE RELATÓRIOS
