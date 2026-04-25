@@ -1,42 +1,27 @@
-# 🤖 Bot Financeiro Telegram - TCC
+﻿# 🤖 Bot Financeiro Telegram
 
-> **Bot inteligente para gerenciamento financeiro pessoal via Telegram** — desenvolvido em Python.
-
-![Status](https://img.shields.io/badge/Status-Pronto%20para%20Produ%C3%A7%C3%A3o-green)
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![License](https://img.shields.io/badge/License-Educational-informational)
-
+Bot simples para registrar despesas e receitas pelo Telegram, gerar relatórios e categorizar transações com IA.
 
 ---
 
-## ✨ O Que É
+## Instalação
 
-Um **bot chatbot financeiro** que permite:
-
-✅ **Registrar transações** via Telegram  
-✅ **Categorização automática** com IA (Hugging Face)
-✅ **Relatórios financeiros** em múltiplos formatos  
-✅ **Armazenamento seguro** em PostgreSQL  
-✅ **Rodar 24/7** em background  
-
----
-
-
-### 🚀 Quick Start
-
-1. **Clonar**
+1. Clone o repositório:
 ```bash
 git clone <seu-repo>
-cd bot-financeiro
+cd bot_financeiro
 ```
-
-2. **Instalar dependências**
+2. Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
+3. Crie o arquivo `.env` usando o modelo `.env.example`.
 
-3. **Criar arquivo `.env`**  
-Use `.env.example` como template e preencha as variáveis essenciais:
+---
+
+## Configuração
+
+No `.env`, preencha as variáveis mínimas:
 ```env
 BOT_TOKEN=seu_token_aqui
 DB_URI=postgresql://postgres:senha@localhost:5432/bot_financeiro
@@ -45,63 +30,54 @@ HF_API_TOKEN=hf_seu_token
 DEBUG=False
 ```
 
-4. **Rodar**
+- `BOT_TOKEN`: token do bot Telegram
+- `DB_URI`: conexão com PostgreSQL
+- `ENCRYPTION_KEY`: chave de criptografia
+- `HF_API_TOKEN`: token Hugging Face para categorização com IA
+
+---
+
+## Execução
+
 ```bash
 python main.py
 ```
 
 ---
 
-### ✨ Uso rápido
+## Comandos principais
 
-**Comandos principais:**
-- **/start** — Menu inicial com botões  
-- **/relatorio simples** — Resumo do mês atual
-- **/relatorio completo** — Detalhes com categorias
-- **/relatorio semanal** — Últimos 7 dias
-- **/relatorio mensal** — Últimos 30 dias
-- **/relatorio mes 1** — Relatório de janeiro (1-12 para qualquer mês)
-- **/reset** — Zerar todas as transações e saldo
-- **/ajustar_saldo 1500** — Ajustar saldo manualmente
-
-**Transações naturais:**
-- **20 pizza** — Registrar despesa de R$ 20 em Alimentação
-- **recebi 1000 salario** — Registrar receita de R$ 1.000
+- `/start` — iniciar o bot
+- `/relatorio simples` — resumo do mês atual
+- `/relatorio completo` — detalhes com categorias
+- `/relatorio semanal` — últimos 7 dias
+- `/relatorio mensal` — últimos 30 dias
+- `/relatorio mes 1` — relatório de janeiro (1-12)
+- `/reset` — limpar transações e saldo
+- `/ajustar_saldo 1500` — ajustar saldo atual
 
 ---
 
-### 🏗️ Código bem organizado
+## Como usar
 
-Todo o código está estruturado com **seções claras**, comentários e documentação:
-- **config/** — Configurações e variáveis de ambiente
-- **models/** — Modelos de banco de dados
-- **commands/** — Handlers dos comandos Telegram
-- **ai/** — Categorização automática com IA + fallback
-- **utils/** — Formatação, parsing, criptografia
-- **services/** — Geração de relatórios
+- Digite valores como `20 pizza` ou `recebi 1000 salario`.
+- O bot classifica a transação automaticamente.
+- Relatórios mostram receita, despesa e economia.
 
 ---
 
-### 🔒 Segurança essencial
+## Observações importantes
 
-- **NÃO** commite o arquivo `.env`.  
-- Verifique que `.gitignore` inclui:
-```
-.env
-.venv/
-__pycache__/
-*.pyc
-```
-- **Criptografia** está implementada; ative em produção conforme instruções no TCC.
+- Não suba o arquivo `.env` para o GitHub.
+- O diretório `doc_guia/` está configurado como privado e não deve ser enviado ao GitHub.
+- Se a IA não responder, o bot usa um fallback por palavra-chave para categorizar.
 
 ---
 
-### 📦 Tecnologias principais
+## Tecnologias
 
-**Python 3.10+**, **python-telegram-bot 20.3**, **PostgreSQL + SQLAlchemy**, **Hugging Face API**, **cryptography**.
-
----
-
-### 📜 Licença
-
-**Educational Use Only - TCC 2026**
+- Python 3.10+
+- Telegram Bot API
+- SQLAlchemy
+- PostgreSQL
+- Hugging Face Inference API

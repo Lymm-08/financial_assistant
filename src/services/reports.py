@@ -59,15 +59,19 @@ def _formatar_categorias_text(categorias):
     return categorias_text
 
 
-def _calcular_economia_pct(receitas, despesas):
-    """Calcula percentual de economia
-
-    Returns:
-        float: Percentual da economia
-    """
+def _calcular_economia(receitas, despesas):
+    """Retorna economia em valor e percentual."""
     economia = receitas - despesas
     pct = economia / receitas * 100 if receitas > 0 else 0.0
-    return pct
+    return economia, pct
+
+
+def _formatar_economia_text(receitas, despesas):
+    """Formata a economia como valor e percentual."""
+    economia, pct = _calcular_economia(receitas, despesas)
+    if receitas > 0:
+        return f"{format_money(economia)} ({pct:.1f}% das receitas)"
+    return f"{format_money(economia)}"
 
 # ==========================
 # FUNÇÃO PRINCIPAL DE RELATÓRIOS
@@ -120,7 +124,7 @@ def generate_simple_report(user_id, db):
 
         # SUBSEÇÃO: Calcular totais
         receitas, despesas, _ = _calcular_totais_e_categorias(entries)
-        pct = _calcular_economia_pct(receitas, despesas)
+        economia_text = _formatar_economia_text(receitas, despesas)
 
         # SUBSEÇÃO: Buscar saldo bancário atual
         bank = session.query(db['Bank']).filter_by(user_id=user_id).first()
@@ -138,7 +142,7 @@ def generate_simple_report(user_id, db):
 💰 Saldo Atual: {format_money(saldo_banco)}
 💚 Receitas do Mês: {format_money(receitas)}
 ❤️ Despesas do Mês: {format_money(despesas)}
-💡 Economia: ({pct:.1f}% das receitas)
+💡 Economia: {economia_text}
 
 📈 Transações Este Mês: {len(entries)}
 """
@@ -164,7 +168,7 @@ def generate_detailed_report(user_id, db):
 
         # SUBSEÇÃO: Calcular totais e categorias
         receitas, despesas, categorias = _calcular_totais_e_categorias(entries)
-        pct = _calcular_economia_pct(receitas, despesas)
+        economia_text = _formatar_economia_text(receitas, despesas)
         categorias_text = _formatar_categorias_text(categorias)
 
         # SUBSEÇÃO: Buscar saldo bancário atual
@@ -193,7 +197,7 @@ def generate_detailed_report(user_id, db):
 💰 Saldo Atual: {format_money(saldo_banco)}
 💚 Receitas do Mês: {format_money(receitas)}
 ❤️ Despesas do Mês: {format_money(despesas)}
-💡 Economia: ({pct:.1f}% das receitas)
+💡 Economia: {economia_text}
 
 📂 Por Categoria:
 {categorias_text}
@@ -310,7 +314,7 @@ def generate_month_specific_report(user_id, month_number, db):
 
         # SUBSEÇÃO: Calcular totais e categorias
         receitas, despesas, categorias = _calcular_totais_e_categorias(entries)
-        pct = _calcular_economia_pct(receitas, despesas)
+        economia_text = _formatar_economia_text(receitas, despesas)
         categorias_text = _formatar_categorias_text(categorias)
 
         # SUBSEÇÃO: Buscar saldo atual
@@ -339,7 +343,7 @@ def generate_month_specific_report(user_id, month_number, db):
 
 💚 Receitas do Mês: {format_money(receitas)}
 ❤️ Despesas do Mês: {format_money(despesas)}
-💡 Economia: ({pct:.1f}% das receitas)
+💡 Economia: {economia_text}
 
 📂 Por Categoria:
 {categorias_text}
