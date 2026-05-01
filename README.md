@@ -8,7 +8,6 @@ Este repositório contém um projeto de TCC desenvolvido em Python, com o objeti
 - `requirements.txt` — dependências do projeto
 - `run_bot.bat` — script para inicialização
 - `README.md` — documentação do projeto
-- `doc_guia/` — guia acadêmico (não público)
 
 ## Objetivos
 - Registrar despesas e receitas de forma prática pelo Telegram.
