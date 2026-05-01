@@ -1,27 +1,25 @@
-# Projeto de TCC - Assistente Financeiro 
+# Thesis Project - Financial Assistant
 
-Este repositório contém um projeto de TCC desenvolvido em Python, com o objetivo de registrar despesas e receitas pelo Telegram, gerar relatórios e categorizar transações utilizando **IA**.
+This repository contains a thesis project developed in Python, designed to record expenses and income via Telegram, generate reports, and categorize transactions using **AI**.
 
-## Estrutura do Projeto
-- `src/` — código-fonte principal
-- `main.py` — execução do bot
-- `requirements.txt` — dependências do projeto
-- `run_bot.bat` — script para inicialização
-- `README.md` — documentação do projeto
+## Project Structure
+- `src/` — main source code
+- `main.py` — bot execution
+- `requirements.txt` — project dependencies
+- `run_bot.bat` — startup script
+- `README.md` — project documentation
 
-## Objetivos
-- Registrar despesas e receitas de forma prática pelo Telegram.
-- Gerar relatórios simples e completos (semanal, mensal e por categoria).
-- Utilizar IA para categorização automática das transações.
+## Objectives
+- Record expenses and income easily through Telegram.
+- Generate both simple and detailed reports (weekly, monthly, and by category).
+- Use AI for automatic transaction categorization.
 
-## Demonstração
-![Demonstração do Projeto](contacerta.gif)
+## Demonstration
+![Project Demonstration](contacerta.gif)
 
-## Tecnologias Utilizadas
+## Technologies Used
 - Python 3.10+
 - Telegram Bot API
 - SQLAlchemy
 - PostgreSQL
 - Hugging Face Inference API
-
----
