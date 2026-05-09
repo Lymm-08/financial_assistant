@@ -1,4 +1,4 @@
-```markdown
+
 # Projeto de TCC - Assistente Financeiro
 
 Este repositório contém um projeto de **Trabalho de Conclusão de Curso (TCC)** desenvolvido em **Python**, projetado para registrar despesas e receitas via **Telegram**, gerar relatórios e categorizar transações utilizando **Inteligência Artificial (IA)**.
@@ -22,7 +22,8 @@ Este repositório contém um projeto de **Trabalho de Conclusão de Curso (TCC)*
 ---
 
 ## Demonstração
-![Demonstração do Projeto](contacerta.gif)
+
+![Project Demonstration](contacerta.gif)
 
 ---
 
