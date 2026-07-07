@@ -1,7 +1,7 @@
 
 # Fluxary - Assistente Financeiro
 
-🌎 Language: English | 🇧🇷 [Português](README.pt-BR.md)
+🌎 Idioma: Português | 🇺🇸 [English](README.md)
 
 Este repositório contém um projeto de **Trabalho de Conclusão de Curso (TCC)** desenvolvido em **Python**, projetado para registrar despesas e receitas via **Telegram**, gerar relatórios e categorizar transações utilizando **Inteligência Artificial (IA)**.
 
