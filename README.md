@@ -1,4 +1,4 @@
-# Thesis Project - Financial Assistant
+# Fluxary - Financial Assistant
 
 This repository contains a thesis project developed in Python, designed to record expenses and income via Telegram, generate reports, and categorize transactions using **AI**.
 
