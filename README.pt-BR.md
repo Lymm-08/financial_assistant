@@ -3,7 +3,7 @@
 
 🌎 Idioma: Português | 🇺🇸 [English](README.md)
 
-Este repositório contém um projeto de **Trabalho de Conclusão de Curso (TCC)** desenvolvido em **Python**, projetado para registrar despesas e receitas via **Telegram**, gerar relatórios e categorizar transações utilizando **Inteligência Artificial (IA)**.
+Este projeto é um bot automatizado em Python com IA pré-treinada para categorizar transações financeiras e fornecer apoio inteligente na gestão de contas. Automatiza tarefas, organiza dados e simplifica a gestão financeira de forma prática e escalável.
 
 ---
 
