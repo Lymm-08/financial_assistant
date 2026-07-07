@@ -1,5 +1,7 @@
 # Fluxary - Financial Assistant
 
+🌎 Language: English | 🇧🇷 [Português](README.pt-BR.md)
+
 This repository contains a thesis project developed in Python, designed to record expenses and income via Telegram, generate reports, and categorize transactions using **AI**.
 
 ## Project Structure
